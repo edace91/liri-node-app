@@ -42,7 +42,10 @@ function tweets(){
 	client.get('statuses/user_timeline', params, function(error, tweets, response){
   		if(error){ console.log(error)
   		} else {
-  		console.log(JSON.stringify(tweets, null, 2));
+  			for ( var i = 0; i < tweets.length; i++){
+  				console.log(tweets[i].created_at + " : " + tweets[i].text); 
+  				console.log("             ");
+  			}
   		
   		}
 	});
@@ -70,7 +73,7 @@ function spotify(){
 
 		songName = songName + nodeArgs[i];
 	}
-	console.log(songName);
+	
 }
 
 	spotify.search({ type: 'track', query: songName }, function(err, data) {
@@ -79,7 +82,11 @@ function spotify(){
         console.log('Error occurred: ' + err);
         return;
     	}else {
-    		console.log(JSON.stringify(data, null, 2));
+    		//console.log(JSON.stringify(data, null, 2));
+    		console.log( "Artist: ")
+    		console.log( data.tracks.items[0].artists[0].name);
+    		console.log( "URL: ")
+    		console.log( data.tracks.items[0].artists[0].uri);
     	}
 	});
 }
@@ -87,28 +94,34 @@ function spotify(){
 // the Omdb function output the following: 
 // Title, Year, IMDB Rating, Country, Language, 
 // Plot, Actors, Rotten Tomatoes Rating & URL.
-function movie(){
+function movie(movieName){
 	var request = require('request');
 
 	var nodeArgs = process.argv;
 
 	var movieName = "";
 
-	for (var i=3; i<nodeArgs.length; i++){
+	if (process.argv[3] == null){
 
-		if (i>3 && i< nodeArgs.length){
+		movieName = "Mr.Nobody";
 
-		movieName = movieName + "+" + nodeArgs[i];
+	}else{
 
+		for (var i=3; i<nodeArgs.length; i++){
+
+			if (i>3 && i< nodeArgs.length){
+
+			movieName = movieName + "+" + nodeArgs[i];
+
+			}
+
+			else {
+
+			movieName = movieName + nodeArgs[i];
+			}
+			
 		}
-
-		else {
-
-		movieName = movieName + nodeArgs[i];
-		}
-		
 	}
-
 	request('http://www.omdbapi.com/?t='+ movieName + '&y=&plot=short&r=json&tomatoes=true', function (error, response, body) {
     // If the request is successful (i.e. if the response status code is 200)
 	
@@ -134,11 +147,13 @@ function itSays(){
 
 	fs.readFile('random.txt', 'utf8', function (err, data){
 
-  		var content = data.split(", ");
-  		for (var i=0; i<content.length; i++){
+  		var content = data.split(",");
+  		var action = content[0];
+
 
 			// Print each element (item) of the array/ 
-			console.log(content[i]);
+			
+
 			
 			switch(content){
 				case 'my-tweets':
@@ -153,7 +168,6 @@ function itSays(){
 				case 'do-what-it-says':
 					itSays();
 				break;
-			}
-		}
+			}	
 	})
 }
