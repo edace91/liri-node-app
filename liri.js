@@ -23,27 +23,27 @@ switch(action){
 //the twitter function will output the following:
 //show your last 20 tweets and when they were created
 function tweets(){
-
+	var screeName = 'YeahEd';
 	var Twitter = require('twitter');
 
 	// Import the twitter keys and assign it to a variable
-	var twitterKeys = require('./keys');
+	var twitterKeys = require('./keys').twitterKeys;
 	//create the twitter client ID
 	//https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=twitterapi&count=20
 	var client = new Twitter({
- 		consumer_key: process.env.TWITTER_CONSUMER_KEY,
- 		consumer_secret: process.env.TWITTER_CONSUMER_SECRET,
-  		access_token_key: process.env.TWITTER_ACCESS_TOKEN_KEY,
-  		access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
+ 		consumer_key: twitterKeys.consumer_key,
+ 		consumer_secret: twitterKeys.consumer_secret,
+  		access_token_key: twitterKeys.access_token_key,
+  		access_token_secret: twitterKeys.access_token_secret
 	});
 
-	var params = {screen_name: 'yeahEd'};
+	var params = {screen_name: 'YeahEd', count = 20};
 
-	client.get('statuses/user_timeline.json?screen_name=twitterapi&count=20', params, function(error, tweets, response){
+	client.get('statuses/user_timeline', params, function(error, tweets, response){
   		if(error){ console.log(error)
   		} else {
   		console.log(JSON.stringify(tweets, null, 2));
-  		console.log(JSON.stringify(response, null, 2));
+  		
   		}
 	});
 }
@@ -134,11 +134,26 @@ function itSays(){
 
 	fs.readFile('random.txt', 'utf8', function (err, data){
 
-  		var things = data.split(", ");
-  		for (var i=0; i<things.length; i++){
+  		var content = data.split(", ");
+  		for (var i=0; i<content.length; i++){
 
 			// Print each element (item) of the array/ 
-			console.log(things[i]);
+			console.log(content[i]);
+			
+			switch(content){
+				case 'my-tweets':
+					tweets();
+				break;
+				case 'spotify-this-song':
+					spotify();
+				break;
+				case 'movie-this':
+					movie();
+				break;
+				case 'do-what-it-says':
+					itSays();
+				break;
+			}
 		}
-	});
+	})
 }
