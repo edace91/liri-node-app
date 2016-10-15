@@ -37,7 +37,7 @@ function tweets(){
   		access_token_secret: twitterKeys.access_token_secret
 	});
 
-	var params = {screen_name: 'YeahEd', count = 20};
+	var params = {screen_name: 'YeahEd', count: 20};
 
 	client.get('statuses/user_timeline', params, function(error, tweets, response){
   		if(error){ console.log(error)
